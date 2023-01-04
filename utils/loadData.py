@@ -3,8 +3,12 @@ from utils.dataPipeline import dataPipeline
 from utils.constants import col_name_type_map
 class loadData(dataPipeline):
     def __init__(self):
-        self.data_db = sqlite3.connect("D:\\My Projects\\power_generation\\app\\database\\PreprocessData.db")
-        print("Opened databases successfully")
+        self.data_db = None
+        try:
+            self.data_db = sqlite3.connect("D:\\My Projects\\power_generation\\app\\database\\PreprocessData.db")
+            print("Opened databases successfully")
+        except Exception as e:
+            print(e)
     
     def generateDDL(self):
         ddl = "create table hospitalData("
