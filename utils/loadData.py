@@ -11,7 +11,7 @@ class loadData(dataPipeline):
             print(e)
     
     def generateDDL(self):
-        ddl = "create table hospitalData("
+        ddl = "create table houseData("
         for col_name, col_type in col_name_type_map.items():
             ddl = ddl + col_name + " " + col_type + "," 
         ddl = ddl + ");"
@@ -26,13 +26,13 @@ class loadData(dataPipeline):
     
     
     def loadDatatoSQL(self, dataset, type="append"):
-        dataset.to_sql("hospitalData", self.data_db, if_exists=type, index=False)
+        dataset.to_sql("houseData", self.data_db, if_exists=type, index=False)
         self.data_db.commit()
         self.data_db.close()
         print("Data Loaded successfully")
     
     def queryData(self):
-        query = "SELECT count(*) FROM hospitalData"
+        query = "SELECT count(*) FROM houseData"
         cur = self.data_db.cursor()
         cur.execute(query)
         rows = cur.fetchall()
