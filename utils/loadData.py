@@ -26,10 +26,17 @@ class loadData(dataPipeline):
     
     
     def loadDatatoSQL(self, dataset, type="append"):
-        dataset.to_sql("houseData", self.data_db, if_exists=type, index=False)
-        self.data_db.commit()
-        self.data_db.close()
-        print("Data Loaded successfully")
+        if type == "append":
+            dataset.to_sql("houseDataInc", self.data_db, if_exists=type, index=False)
+            self.data_db.commit()
+            self.data_db.close()
+            print("Incremental Data Loaded successfully")
+        elif type == "replace":
+            dataset.to_sql("houseData", self.data_db, if_exists=type, index=False)
+            self.data_db.commit()
+            self.data_db.close()
+            print("Incremental Data Loaded successfully")
+
     
     def queryData(self):
         query = "SELECT count(*) FROM houseData"
@@ -38,6 +45,16 @@ class loadData(dataPipeline):
         rows = cur.fetchall()
         for i in rows:
             print(i)
+    
+
+    def generateIncDDL(self):
+        ddl = "create table houseDataInc("
+        for col_name, col_type in col_name_type_map.items():
+            ddl = ddl + col_name + " " + col_type + "," 
+        ddl = ddl + ");"
+        ddl = ddl[:-3] + ddl[-3+1]
+        ddl = ddl+";"
+        return ddl
     
     def closeDB(self):
         self.data_db.close()
